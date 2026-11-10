@@ -4,16 +4,16 @@ HIP=192.168.10.2
 HMAC=00:00:00:00:0A:01
 SNET=1
 
-HINTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\./ {print $2; exit}')
-S1INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.1\./ {print $2; exit}')
-S2INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.2\./ {print $2; exit}')
-S3INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.3\./ {print $2; exit}')
-S4INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.4\./ {print $2; exit}')
-S5INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.5\./ {print $2; exit}')
-S6INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.6\./ {print $2; exit}')
-S7INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.7\./ {print $2; exit}')
-S8INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.8\./ {print $2; exit}')
-S9INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.9\./ {print $2; exit}')
+HINTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.1/ {print $2; exit}')
+S1INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.3/ {print $2; exit}')
+S2INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.4/ {print $2; exit}')
+S3INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.5/ {print $2; exit}')
+S4INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.6/ {print $2; exit}')
+S5INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.7/ {print $2; exit}')
+S6INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.8/ {print $2; exit}')
+S7INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.9/ {print $2; exit}')
+S8INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.10/ {print $2; exit}')
+S9INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.11/ {print $2; exit}')
 
 echo "Instalando dependencias"
 sudo apt-get update

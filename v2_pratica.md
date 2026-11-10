@@ -28,7 +28,7 @@ Neste laboratório, os alunos irão simular um AS, com suas próprias políticas
 *Figura 2: Disputa por Recursos de Rede.*
 
 
-O link até o AS do aluno é um gargalo de comunicação e precisa ser gerenciado. A primeira etapa compreende analisar os fluxo de dados de um switch usando a ferramenta NetFlow. Então, entender e criar regras para manter o serviço de streaming com QoS suficiente a seus clientes, utilizando a interface ovs-ofctl. Por fim, o processo deve ser automatizado com um código Python. 
+O link até o AS do aluno é um gargalo de comunicação e precisa ser gerenciado. A primeira etapa compreende analisar a arquitetura SDN OpenFlow. Depois, vamos simular um cenário sem congestionamento e um com congestionamento. Neste laboratório, dois serviços são fornecidos pelo servidor aos hosts, streaming de video e background. Vamos utilizar a ferramenta sFlow, compatível com OVS, para entender o tipo de tráfego que causa o congestionamento. Depois, vamos criar regras para limitar o tráfego background para priorizar o tráfego do serviço de streaming.  Por fim, vamos analisar um orquestrador automatizado, que faz a analise e cria regras para limitar o fluxo sem intervenção do administrador. 
 
 Neste experimento, iremos utilizar o provedor de nuvem CloudLab, mediante disponibilidade de serviço. Cada aluno deve ter acesso a um switch e um host (administrador/controlador) para explorarem as atividades do laboratório.
 
@@ -43,6 +43,22 @@ CloudLab é um serviço provedor de nuvem que fornece máquinas virtuais fisicam
 * Topologia do laboratório
 ![CloudLab](midia/topologia.png)  
 *Figura 4: Topologia.*
+
+
+* Tabela endereçamento
+
+|Domínio|Host|IP H to S|IP S to S|
+|---|---|---|---|
+|h1|192.168.1.2|192.168.1.1|192.168.1.3|
+|h2|192.168.2.2|192.168.2.1|192.168.2.3|
+|h3|192.168.3.2|192.168.3.1|192.168.3.3|
+|h4|192.168.4.2|192.168.4.1|192.168.4.3|
+|h5|192.168.5.2|192.168.5.1|192.168.5.3|
+|h6|192.168.6.2|192.168.6.1|192.168.6.3|
+|h7|192.168.7.2|192.168.7.1|192.168.7.3|
+|h8|192.168.8.2|192.168.8.1|192.168.8.3|
+|h9|192.168.9.2|192.168.9.1|192.168.9.3|
+
 
 <!-- <img src="caminho-da-imagem.png" alt="Texto alternativo" width="300">  -->
 <!-- ou ![texto](caminho) -->
