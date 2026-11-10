@@ -81,6 +81,11 @@ ssh -i ~/.ssh/chave_lab niltonm@ip-do-cloudlab
 ```
 
 
+* Ao subir a topologia, cada host e switch executou (ex host1): 
+```bash
+cd /local && git clone https://github.com/NiltonMocelin/lab_phd.git && cd lab_phd && bash setup/1host_setup.sh
+```
+
 ## Configuração dos Switches
 Os Switches inicializam como máquinas convencionais, com múltiplas interfaces conectando hosts entre si (ou a outro switch). Por isso, vamos configurar-los:
 
@@ -123,7 +128,7 @@ sudo ovs-ofctl del-flows -OOpenFlow13 switch1
 
 4. Configurando o monitor de fluxos sFlow:
 ```bash
-sudo ovs-vsctl -- --id=@s create sflow agent=eno2 targets="192.168.10.2:6343" sampling=64 poll=10 \ -- set bridge switch1 sflow=@s
+sudo ovs-vsctl -- --id=@s create sflow agent=$HINTERFACE targets="[\"$HIP:6343\"]" sampling=64 poll=10 -- set bridge switch1 sflow=@s
 ```
 
 ## Configuração Hosts
@@ -137,6 +142,7 @@ ssh -i ~/.ssh/chave_lab niltonm@ip-do-cloudlab
 ```bash
 echo "Aumentar a validade das entradas da tabela ARP para 1h"
 sudo sysctl -w net.ipv4.neigh.default.base_reachable_time_ms=3600000
+sudo arp -s $IP_GATEWAY $MAC_GATEWAY
 ```
 
 2. Configurar endereços MAC simplificados (mais fáceis para criar as regras)

@@ -1,16 +1,12 @@
 echo "Configurando host 10 - server"
 
 sudo apt-get update
-# sudo pip3 install ryu
-sudo apt install openvswitch-switch
 
-# echo "Installing sFlow-RT"
-# wget https://inmon.com/products/sFlow-RT/sflow-rt.tar.gz
-# tar -xvzf sflow-rt.tar.gz
-# cd sflow-rt
-# ./start.sh
+sudo apt install -y openvswitch-switch
 
-pip install pysflow
+
+sudo apt install -y python3-pip
+python3 -m pip install pysflow
 
 sudo sysctl -w net.ipv4.neigh.default.base_reachable_time_ms=3600000
 
@@ -20,9 +16,13 @@ sleep 1
 sudo ip link set dev $INTERFACE address 00:00:00:00:0A:01
 sudo ip link set dev $INTERFACE up
 
-sudo apt-get update
+echo "Configurando ARP estático para o switch"
+sudo arp -s 192.168.10.1 00:00:00:00:0A:02
+
 sudo apt-get install -y openvswitch-common
-sudo apt-get install iperf3
+sudo apt-get install -y iperf3
+
+sudo apt install ffmpeg -y
 
 # Baixa o pacote compactado (substitua a versão se necessário)
 echo instalando mediamtx

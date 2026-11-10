@@ -2,10 +2,17 @@ echo "Configurando switch 5"
 echo "substituir HIP pelo ip do host"
 HIP=192.168.5.2
 HMAC=00:00:00:00:05:01
+SMAC=00:00:00:00:05:02
 SNET=1
-HINTERFACE=$(ip -o addr show | awk '/inet 192\.168\.5\./ {print $2; exit}')
-SINTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\./ {print $2; exit}')
+HINTERFACE=$(ip -o addr show | awk '/inet 192\.168\.5\.1/ {print $2; exit}')
+SINTERFACE=$(ip -o addr show | awk '/inet 192\.168\.5\.3/ {print $2; exit}')
 
+sudo ip link set dev "$HINTERFACE" down
+sleep 1
+sudo ip link set dev $HINTERFACE address $SMAC
+sudo ip link set dev $HINTERFACE up
+
+sudo arp -s $HIP $HMAC
 
 echo "Instalando dependencias"
 sudo apt-get update
@@ -26,8 +33,8 @@ sudo ovs-vsctl add-port switch1 $HINTERFACE -- set interface $HINTERFACE ofport_
 sudo ovs-vsctl add-port switch1 $SINTERFACE -- set interface $SINTERFACE ofport_request=2
 
 echo "configurando sFlow"
-sudo ovs-vsctl -- --id=@s create sflow agent=eno2 targets="$HIP:6343" sampling=64 poll=10 \ -- set bridge switch1 sflow=@s
+sudo ovs-vsctl -- --id=@s create sflow agent=$HINTERFACE targets="[\"$HIP:6343\"]" sampling=64 poll=10 -- set bridge switch1 sflow=@s
 
 echo "configurando as regras de fluxo"
-sudo ovs-ofctl add-flow switch1 "priority=100,ip,nw_dst=$HIP,actions=set_field:eth_dst->$HMAC,output:1"
-sudo ovs-ofctl add-flow switch1 "priority=10,ip,nw_dst=192.168.0.0/16,actions=output:2"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "priority=100,ip,nw_dst=192.168.1.2,actions=set_field:$HMAC->eth_dst,output:1"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "priority=10,ip,nw_dst=192.168.0.0/16,actions=output:2"

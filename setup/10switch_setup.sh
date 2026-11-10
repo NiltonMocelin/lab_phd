@@ -2,6 +2,7 @@ echo "Configurando switch 10"
 echo "substituir HIP pelo ip do host"
 HIP=192.168.10.2
 HMAC=00:00:00:00:0A:01
+SMAC=00:00:00:00:0A:02
 SNET=1
 
 HINTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.1/ {print $2; exit}')
@@ -14,6 +15,14 @@ S6INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.8/ {print $2; exit}')
 S7INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.9/ {print $2; exit}')
 S8INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.10/ {print $2; exit}')
 S9INTERFACE=$(ip -o addr show | awk '/inet 192\.168\.10\.11/ {print $2; exit}')
+
+
+sudo ip link set dev "$HINTERFACE" down
+sleep 1
+sudo ip link set dev $HINTERFACE address $SMAC
+sudo ip link set dev $HINTERFACE up
+
+sudo arp -s $HIP $HMAC
 
 echo "Instalando dependencias"
 sudo apt-get update
@@ -42,16 +51,17 @@ sudo ovs-vsctl add-port switch1 $S8INTERFACE -- set interface $S8INTERFACE ofpor
 sudo ovs-vsctl add-port switch1 $S9INTERFACE -- set interface $S9INTERFACE ofport_request=10
 
 echo "configurando sFlow"
-sudo ovs-vsctl -- --id=@s create sflow agent=eno2 targets="$HIP:6343" sampling=64 poll=10 \ -- set bridge switch1 sflow=@s
+# sudo ovs-vsctl -- --id=@s create sflow agent=$HINTERFACE targets="192.168.10.2:6343" sampling=64 poll=10 \ -- set bridge switch1 sflow=@s
+sudo ovs-vsctl -- --id=@s create sflow agent=$HINTERFACE targets="[\"$HIP:6343\"]" sampling=64 poll=10 -- set bridge switch1 sflow=@s
 
 echo "configurando as regras de fluxo"
-sudo ovs-ofctl add-flow switch1 "ip,nw_dst=192.168.10.2,actions=set_field:eth_dst->$HMAC,output:1"
-sudo ovs-ofctl add-flow switch1 "ip,nw_dst=192.168.1.0/24,actions=output:2"
-sudo ovs-ofctl add-flow switch1 "ip,nw_dst=192.168.2.0/24,actions=output:3"
-sudo ovs-ofctl add-flow switch1 "ip,nw_dst=192.168.3.0/24,actions=output:4"
-sudo ovs-ofctl add-flow switch1 "ip,nw_dst=192.168.4.0/24,actions=output:5"
-sudo ovs-ofctl add-flow switch1 "ip,nw_dst=192.168.5.0/24,actions=output:6"
-sudo ovs-ofctl add-flow switch1 "ip,nw_dst=192.168.6.0/24,actions=output:7"
-sudo ovs-ofctl add-flow switch1 "ip,nw_dst=192.168.7.0/24,actions=output:8"
-sudo ovs-ofctl add-flow switch1 "ip,nw_dst=192.168.8.0/24,actions=output:9"
-sudo ovs-ofctl add-flow switch1 "ip,nw_dst=192.168.9.0/24,actions=output:10"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "ip,nw_dst=192.168.10.2,actions=set_field:$HMAC->eth_dst,output:1"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "ip,nw_dst=192.168.1.0/24,actions=output:2"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "ip,nw_dst=192.168.2.0/24,actions=output:3"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "ip,nw_dst=192.168.3.0/24,actions=output:4"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "ip,nw_dst=192.168.4.0/24,actions=output:5"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "ip,nw_dst=192.168.5.0/24,actions=output:6"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "ip,nw_dst=192.168.6.0/24,actions=output:7"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "ip,nw_dst=192.168.7.0/24,actions=output:8"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "ip,nw_dst=192.168.8.0/24,actions=output:9"
+sudo ovs-ofctl -OOpenFlow13 add-flow switch1 "ip,nw_dst=192.168.9.0/24,actions=output:10"
