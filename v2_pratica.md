@@ -19,10 +19,8 @@
 4. Gerenciar switch ovs.
 5. Configurar regras de priorização de tráfego.
 
-Neste laboratório, os alunos irão simular um AS, com suas próprias políticas de encaminhamento de pacotes. Cada estudante terá um a rede com clientes que acessam o serviço de streaming de video de um servidor, que está em outra rede, fora do seu domínio administrativo, similar ao mostrado na Figura. Em determinado momento, fluxos UDP gananciosos surgem para degradar o serviço. O link é ocupado por fluxos que competem por recursos entre si, porém alguns fluxos podem ser considerados mais prioritários que outros, como mostra o monitoramento de um enlace na Figura abaixo.
+Neste laboratório, os alunos irão simular um AS, com suas próprias políticas de encaminhamento de pacotes. Cada estudante terá um a rede com clientes que acessam o serviço de streaming de video de um servidor, que está em outra rede, fora do seu domínio administrativo. Em determinado momento, fluxos UDP gananciosos surgem para degradar o serviço. O link é ocupado por fluxos que competem por recursos entre si, porém alguns fluxos podem ser considerados mais prioritários que outros, como mostra o monitoramento de um enlace na Figura abaixo.
 
-![Rede ISP](imgs/problema1.png)  
-*Figura 1: Rede ISP.*
 
 ![Disputa por Recursos de Rede](midia/disputa.png)  
 *Figura 2: Disputa por Recursos de Rede.*
@@ -65,7 +63,13 @@ CloudLab é um serviço provedor de nuvem que fornece máquinas virtuais fisicam
 
 ## Inicio do Lab
 
-Todos os códigos utilizados podem ser encontrados no link: \url{https://github.com/NiltonMocelin/lab_phd}. Primeiro, clone o repositório para ter acesso a chave privada que será usada para acessar o CloudLab via SSH. Encontre o diretório das chaves, ajuste as permissões e copie para pasta .ssh/ do computador (seu):
+Todos os códigos utilizados podem ser encontrados no link: \url{https://github.com/NiltonMocelin/lab_phd}. 
+
+A topologia está escrita no arquivo profile.xml.
+Cada dispositivo (switch e host) é inicializado executando o script correspondente de setup/. No entanto, para contextos genéricos, descrevemos nesse documento os passos principais para a configuração de hosts e switches, permitindo que você possa configurar os dispositivos de forma independente, em mininet por exemplo.
+
+
+Primeiro, clone o repositório para ter acesso a chave privada que será usada para acessar o CloudLab via SSH. Encontre o diretório das chaves, ajuste as permissões e copie para pasta .ssh/ do computador (seu):
 
 ```bash
 git clone https://github.com/NiltonMocelin/lab_phd_.git
